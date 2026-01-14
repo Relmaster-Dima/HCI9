@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PartyUp | Вход</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 32px;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: #4a4a4a;
+            border-radius: 8px;
+            padding: 32px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #b9bbbe;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        label .required {
+            color: #f04747;
+            margin-left: 2px;
+        }
+
+        input[type="email"],
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            background: #303030;
+            border: 1px solid #303030;
+            border-radius: 4px;
+            color: #dcddde;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #5865f2;
+        }
+
+        .forgot-password {
+            text-align: left;
+            margin-top: 8px;
+        }
+
+        .forgot-password a {
+            color: #00b0f4;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: #5865f2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #4752c4;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 16px;
+            color: #b9bbbe;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #00b0f4;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">🎉</div>
+        <div class="logo-text">PartyUp</div>
+    </div>
+
+    <div class="container">
+        <div class="auth-card">
+            <h1>Добро пожаловать!</h1>
+            
+            <form onsubmit="event.preventDefault(); window.location.href='Party.html';">
+                <div class="form-group">
+                    <label>Адрес электронной почты <span class="required">*</span></label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Пароль <span class="required">*</span></label>
+                    <input type="password" required>
+                </div>
+
+                <div class="forgot-password">
+                    <a href="#">Забыли пароль?</a>
+                </div>
+
+                <button type="submit" class="btn-primary">Войти</button>
+            </form>
+
+            <div class="register-link">
+                Нет аккаунта? <a href="register.html">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

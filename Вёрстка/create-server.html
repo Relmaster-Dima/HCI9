@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Server Creation</title>
+    <style>
+        /* Фирменные цвета Discord */
+        :root {
+            --header-primary: #ffffff;
+            --header-secondary: #b5bac1;
+            --background-secondary: #2b2d31;
+            --background-tertiary: #1e1f22;
+            --background-modifier-hover: rgba(78, 80, 88, 0.3);
+            --text-normal: #dbdee1;
+            --text-muted: #949ba4;
+            --brand: #5865f2; /* То самый Blurple */
+            --brand-hover: #4752c4;
+            --button-secondary-bg: #4e5058;
+            --input-background: #1e1f22;
+        }
+
+        body {
+            font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--background-tertiary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: var(--text-normal);
+        }
+
+        /* Верхняя панель из вашего скетча */
+        .page-step-indicator {
+            position: absolute;
+            top: 20px;
+            color: var(--header-secondary);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .modal {
+            background-color: var(--background-secondary);
+            width: 440px;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.24);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            color: var(--header-primary);
+            font-size: 24px;
+            margin: 0 0 8px 0;
+        }
+
+        .subtitle {
+            color: var(--header-secondary);
+            font-size: 16px;
+        }
+
+        /* Загрузка иконки */
+        .upload-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border: 2px dashed var(--header-secondary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            color: var(--header-primary);
+        }
+
+        .icon-wrapper:hover {
+            border-color: var(--brand);
+        }
+
+        .plus-icon { font-size: 24px; font-weight: 300; }
+
+        .upload-text {
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--header-primary);
+            text-transform: uppercase;
+        }
+
+        /* Поле ввода */
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            color: var(--header-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--input-background);
+            border: none;
+            border-radius: 3px;
+            color: var(--text-normal);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Сетка шаблонов */
+        .templates-label {
+            text-align: left;
+            margin-bottom: 8px;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .template-card {
+            background-color: rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.15s;
+        }
+
+        .template-card:hover {
+            background-color: var(--background-modifier-hover);
+        }
+
+        .template-card.selected {
+            background-color: var(--background-modifier-hover);
+            border-color: var(--brand);
+        }
+
+        .template-emoji {
+            font-size: 24px;
+            margin-right: 12px;
+        }
+
+        .template-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--header-primary);
+        }
+
+        /* Футер и кнопки */
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-back {
+            color: var(--header-primary);
+            background: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-back:hover { text-decoration: underline; }
+
+        .btn-create {
+            background-color: var(--brand);
+            color: white;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 3px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-create:hover {
+            background-color: var(--brand-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-step-indicator">6. Создание сервера</div>
+
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Создать сервер</h2>
+            <div class="subtitle">Ваш сервер — это место, где вы общаетесь с друзьями.</div>
+        </div>
+
+        <div class="upload-section">
+            <div class="icon-wrapper">
+                <span class="plus-icon">+</span>
+            </div>
+            <div class="upload-text">Загрузить</div>
+        </div>
+
+        <div class="input-group">
+            <label>Название сервера</label>
+            <input type="text" value="Мой классный сервер">
+        </div>
+
+        <label class="templates-label">Шаблон сервера</label>
+        <div class="templates-grid">
+            <div class="template-card">
+                <span class="template-emoji">🎮</span>
+                <span class="template-name">Игровой</span>
+            </div>
+            <div class="template-card">
+                <span class="template-emoji">🎓</span>
+                <span class="template-name">Учебный</span>
+            </div>
+            <div class="template-card">
+                <span class="template-emoji">👥</span>
+                <span class="template-name">Для друзей</span>
+            </div>
+            <div class="template-card selected">
+                <span class="template-emoji">⭐</span>
+                <span class="template-name">Пустой</span>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-back" onclick="window.location.href='Party.html'">Отмена</button>
+            <button class="btn-create" onclick="window.location.href='server.html'">Создать</button>
+        </div>
+    </div>
+
+</body>
+</html>

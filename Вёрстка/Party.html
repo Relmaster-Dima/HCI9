@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>PartyUP | Главная</title>
+    <style>
+        :root {
+            --bg-servers: #1e1f22;
+            --bg-channels: #2b2d31;
+            --bg-main: #313338;
+            --bg-active: #404249;
+            --text-primary: #f2f3f5;
+            --text-muted: #949ba4;
+            --brand-gradient: linear-gradient(135deg, #a450ff, #00b0f4);
+            --accent-blue: #5865f2;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 1. Боковая панель серверов */
+        .sidebar-servers {
+            width: 72px;
+            background-color: var(--bg-servers);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 12px;
+            gap: 8px;
+        }
+
+        .server-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--bg-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .server-icon.logo {
+            background: var(--brand-gradient);
+            border-radius: 16px;
+        }
+
+        .server-icon:hover {
+            border-radius: 16px;
+            background-color: var(--accent-blue);
+        }
+
+        /* 2. Панель каналов/друзей */
+        .sidebar-channels {
+            width: 240px;
+            background-color: var(--bg-channels);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-bar {
+            padding: 20px 10px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: var(--bg-servers);
+            border: none;
+            padding: 6px;
+            border-radius: 4px;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .channel-list {
+            flex: 1;
+            padding: 10px;
+        }
+
+        .channel-item {
+            padding: 8px;
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+
+        .channel-item:hover, .channel-item.active {
+            background-color: var(--bg-active);
+            color: var(--text-primary);
+        }
+
+        /* 3. Основная область */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-nav {
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .content-body {
+            display: flex;
+            flex: 1;
+        }
+
+        .friends-list {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .activity-panel {
+            width: 350px;
+            border-left: 1px solid rgba(255,255,255,0.05);
+            padding: 20px;
+        }
+
+        .section-title {
+            text-transform: uppercase;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        /* Профиль снизу */
+        .user-panel {
+            height: 52px;
+            background: rgba(0,0,0,0.1);
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: #5865f2;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="sidebar-servers">
+            <div class="server-icon logo" onclick="window.location.href='index.html'"><b>P-UP</b></div>
+            <div style="width: 32px; height: 2px; background: #35363c; margin: 4px 0;"></div>
+            <div class="server-icon" onclick="window.location.href='server.html'">🎮</div>
+            <div class="server-icon" onclick="window.location.href='server.html'">📁</div>
+            <div class="server-icon" style="color: #23a559;" onclick="window.location.href='create-server.html'">+</div>
+        </div>
+
+        <div class="sidebar-channels">
+            <div class="search-bar">
+                <input type="text" placeholder="Найти или начать беседу">
+            </div>
+            <div class="channel-list">
+                <div class="channel-item active">👤 Друзья</div>
+                <div class="channel-item">📩 Запросы общения</div>
+                <div class="channel-item">💎 PartyUP Nitro</div>
+                <div class="channel-item">🏪 Магазин</div>
+                
+                <div class="section-title" style="margin-top: 20px;">Личные сообщения</div>
+                <div class="channel-item">Mihasensey</div>
+                <div class="channel-item">Relmaster</div>
+                <div class="channel-item">Konstantin Tokio</div>
+            </div>
+            
+            <div class="user-panel">
+                <div class="avatar"></div>
+                <div style="flex:1; font-size: 13px;">
+                    <div style="font-weight: bold;">User_Name</div>
+                    <div style="color: var(--text-muted); font-size: 11px;">В сети</div>
+                </div>
+                <div style="color: var(--text-muted);">⚙️</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="top-nav">
+                <span style="font-weight: bold; color: var(--text-muted);">👤 Друзья</span>
+                <div style="width: 1px; height: 24px; background: #404249;"></div>
+                <a href="#" class="nav-link active">В сети</a>
+                <a href="#" class="nav-link">Все</a>
+                <a href="#" class="nav-link">Ожидание</a>
+                <a href="#" class="nav-link" style="background: #248046; color: white;">Добавить в друзья</a>
+            </div>
+
+            <div class="content-body">
+                <div class="friends-list">
+                    <div class="section-title">В СЕТИ — 5</div>
+                    <div class="channel-item" style="border-top: 1px solid #404249; padding: 15px 0;">
+                        <div class="avatar" style="margin-left: 10px;"></div>
+                        <div>Relmaster <br><small>В сети</small></div>
+                    </div>
+                </div>
+                <div class="activity-panel">
+                    <div class="section-title">Активные контакты</div>
+                    <div style="background: var(--bg-servers); padding: 15px; border-radius: 8px; text-align: center; color: var(--text-muted);">
+                        <small>Пока здесь пусто. Когда друзья начнут играть, это отобразится здесь!</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

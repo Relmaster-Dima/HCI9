@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>PartyUP | Голосовой канал Лобби</title>
+    <style>
+        :root {
+            --bg-servers: #1e1f22;
+            --bg-channels: #2b2d31;
+            --bg-chat: #000000; /* В голосовом чате фон часто чернее */
+            --bg-user-panel: #232428;
+            --text-primary: #f2f3f5;
+            --text-muted: #949ba4;
+            --brand-gradient: linear-gradient(135deg, #a450ff, #00b0f4);
+            --accent-green: #23a559;
+            --accent-red: #da373c;
+            --modifier-selected: rgba(78, 80, 88, 0.6);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-chat); color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .app-container { display: flex; height: 100vh; }
+
+        /* --- 1. ПАНЕЛЬ СЕРВЕРОВ --- */
+        .sidebar-servers {
+            width: 72px; background: var(--bg-servers);
+            display: flex; flex-direction: column; align-items: center; padding-top: 12px; gap: 8px;
+        }
+        .server-icon {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: #313338; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.2s; position: relative;
+        }
+        .server-icon.logo { background: var(--brand-gradient); border-radius: 16px; color: white; font-weight: bold; font-size: 14px; }
+        .server-icon.active::before {
+            content: ""; position: absolute; left: -12px; width: 4px; height: 40px; background: white; border-radius: 0 4px 4px 0;
+        }
+
+        /* --- 2. ПАНЕЛЬ КАНАЛОВ --- */
+        .sidebar-channels {
+            width: 240px; background: var(--bg-channels); display: flex; flex-direction: column;
+        }
+        .header-server { height: 48px; padding: 0 16px; display: flex; align-items: center; font-weight: bold; border-bottom: 1px solid rgba(0,0,0,0.2); }
+        .channel-list { flex: 1; padding: 10px 0; }
+        .channel-category { padding: 16px 8px 4px 16px; font-size: 12px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; }
+        .channel-item {
+            margin: 2px 8px; padding: 6px 8px; border-radius: 4px; color: var(--text-muted);
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+        .channel-item.active-voice { background: var(--modifier-selected); color: white; }
+        .voice-user { margin-left: 32px; display: flex; align-items: center; gap: 8px; font-size: 14px; padding: 4px 0; }
+        .voice-user .avatar-small { width: 24px; height: 24px; border-radius: 50%; background: #5865f2; }
+
+        /* --- БЛОК ПОДКЛЮЧЕНИЯ И ПОЛЬЗОВАТЕЛЯ --- */
+        .bottom-section { background: var(--bg-user-panel); }
+        
+        /* Статус голосовой связи */
+        .voice-connection-status {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .status-info { color: var(--accent-green); font-size: 13px; font-weight: bold; }
+        .status-sub { color: var(--text-muted); font-size: 11px; display: block; font-weight: normal; }
+        .status-actions { display: flex; gap: 8px; color: var(--text-muted); }
+
+        .user-panel { height: 52px; display: flex; align-items: center; padding: 0 8px; gap: 4px; }
+        .avatar-wrapper { position: relative; width: 32px; height: 32px; }
+        .avatar-main { width: 100%; height: 100%; background: #5865f2; border-radius: 50%; }
+        .status-dot { position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px; background: var(--accent-green); border: 3px solid var(--bg-user-panel); border-radius: 50%; }
+        .user-controls { display: flex; }
+        .control-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: pointer; color: #dbdee1; }
+
+        /* --- 3. ЦЕНТРАЛЬНАЯ ЗОНА (ВИДЕО) --- */
+        .voice-content { flex: 1; display: flex; flex-direction: column; position: relative; padding: 16px; gap: 16px; background: #000; }
+        
+        .video-grid { flex: 1; display: grid; grid-template-rows: 1fr 1fr; gap: 16px; }
+        
+        .video-tile { 
+            background: #2b2d31; border-radius: 8px; position: relative; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .tile-avatar { width: 80px; height: 80px; background: #5865f2; border-radius: 50%; margin-bottom: 10px; }
+        .tile-name { position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 4px; font-size: 13px; }
+
+        .activity-tile { background: linear-gradient(to bottom, #2b2d31, #111); border: 1px solid #333; }
+        .activity-content { text-align: center; }
+        .activity-icon { width: 120px; margin-bottom: 20px; } /* Место для картинки с трофеем */
+        .activity-buttons { display: flex; gap: 10px; justify-content: center; }
+        .btn-action { background: #4e5058; border: none; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+        .btn-action:hover { background: #6d6f78; }
+
+        /* Плавающая панель управления */
+        .floating-controls {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #1e1f22; padding: 8px 16px; border-radius: 12px;
+            display: flex; gap: 12px; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        .round-btn { width: 48px; height: 48px; background: #313338; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; }
+        .round-btn:hover { background: #4e5058; }
+        .round-btn.end-call { background: var(--accent-red); }
+        .round-btn.end-call:hover { background: #a1282c; }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar-servers">
+        <div class="server-icon logo" onclick="window.location.href='Party.html'">P-UP</div>
+        <div style="width: 32px; height: 2px; background: #35363c; margin: 4px 0;"></div>
+        <div class="server-icon active">🛠️</div>
+        <div class="server-icon" onclick="window.location.href='server.html'">🎮</div>
+        <div class="server-icon" style="color: var(--accent-green);" onclick="window.location.href='create-server.html'">+</div>
+    </aside>
+
+    <aside class="sidebar-channels">
+        <div class="header-server">Сервер иван фрезе...</div>
+        <div class="channel-list">
+            <div class="channel-item" onclick="window.location.href='server.html'"># общее</div>
+            <div class="channel-category">Голосовые каналы</div>
+            <div class="channel-item active-voice">🔊 Лобби</div>
+            <div class="voice-user">
+                <div class="avatar-small"></div>
+                <span>Ded_12_let</span>
+            </div>
+            <div class="channel-item">🔊 Игры</div>
+        </div>
+
+        <div class="bottom-section">
+            <div class="voice-connection-status">
+                <div>
+                    <span class="status-info">Голосовая связь подключена</span>
+                    <span class="status-sub">Лобби / Сервер иван фрезеровщиков</span>
+                </div>
+                <div class="status-actions">
+                    <span>ℹ️</span>
+                    <span>📞</span>
+                </div>
+            </div>
+
+            <div class="user-panel">
+                <div class="avatar-wrapper">
+                    <div class="avatar-main"></div>
+                    <div class="status-dot"></div>
+                </div>
+                <div style="flex:1">
+                    <span class="username">Ded_12_let</span>
+                    <span class="status-text">В голосовом чате</span>
+                </div>
+                <div class="user-controls">
+                    <div class="control-btn">🎙️</div>
+                    <div class="control-btn">🎧</div>
+                    <div class="control-btn">⚙️</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="voice-content">
+        <div class="video-grid">
+            <div class="video-tile">
+                <div class="tile-avatar"></div>
+                <div class="tile-name">Ded_12_let</div>
+            </div>
+
+            <div class="video-tile activity-tile">
+                <div class="activity-content">
+                    <div style="font-size: 50px; margin-bottom: 10px;">🏆</div> <div class="activity-buttons">
+                        <button class="btn-action">Пригласить в голосовой чат</button>
+                        <button class="btn-action">Выбрать активность</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="floating-controls">
+            <div class="round-btn">📹</div>
+            <div class="round-btn">🖥️</div>
+            <div class="round-btn">🚀</div>
+            <div class="round-btn">🎙️</div>
+            <div class="round-btn">🎧</div>
+            <div class="round-btn">...</div>
+            <div class="round-btn end-call">📞</div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
